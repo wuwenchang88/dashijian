@@ -1,12 +1,126 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="stylesheet" href="./assets/css/login.css">
+    <link rel="stylesheet" href="./assets/lib/layui/css/layui.css">
+    <script src="./assets/lib/jquery.js"></script>
+    <script src="./assets/lib/layui/layui.all.js"></script>
 </head>
+
 <body>
-    
+    <div class="layui-main">
+        <img src="./assets/images/logo.png" alt="">
+    </div>
+    <div class="loginAndRegBox">
+        <div class="title-box"></div>
+        <div class="login-tab">
+            <form class="layui-form" id="form_login">
+                <div class="layui-form-item">
+                    <i class="layui-icon layui-icon-username"></i>
+                    <input type="text" name="username" placeholder="请输入用户名" lay-verify="required" autocomplete="off" class="layui-input">
+                </div>
+                <div class="layui-form-item">
+                    <i class="layui-icon layui-icon-password"></i>
+                    <input type="password" name="password" placeholder="请输入密码" lay-verify="required|pass" autocomplete="off" class="layui-input">
+                </div>
+                <div class="layui-form-item">
+                    <button  class="layui-btn layui-btn-fluid login-submit" lay-submit>登录</button>
+                </div>
+                <div class="layui-form-item link_login">
+                    <a href="javascript:;">去注册账号</a>
+                </div>
+            </form>
+        </div>
+        <div class="regist-tab">
+            <form class="layui-form"   id="form_regist">
+                <div class="layui-form-item">
+                    <i class="layui-icon layui-icon-username"></i>
+                    <input type="text" name="username" placeholder="请输入用户名"  lay-verify="required" autocomplete="off" class="layui-input">
+                </div>
+                <div class="layui-form-item">
+                    <i class="layui-icon layui-icon-password"></i>
+                    <input type="password" name="password" placeholder="请输入密码" lay-verify="required|pass"  autocomplete="off" class="layui-input">
+                </div>
+                <div class="layui-form-item">
+                    <i class="layui-icon layui-icon-password"></i>
+                    <input type="password" name="repassword" placeholder="请再次输入密码"  lay-verify="required|pass|repass" autocomplete="off" class="layui-input">
+                </div>
+                <div class="layui-form-item">
+                    <button class="layui-btn layui-btn-fluid login-submit" lay-submit id="regist-submit">注册</button>
+                </div>
+                <div class="layui-form-item link_regist">
+                    <a href="javascript:;">去登录</a>
+                </div>
+                
+            </form>
+        </div>
+    </div>
 </body>
+<script src="./assets/js/baseApi.js"></script>
+<script>
+;(function(){
+    $('.link_login').click(function(){
+        $('.login-tab').hide()
+        $('.regist-tab').show()
+    })
+    $('.link_regist').click(function(){
+        $('.login-tab').show()
+        $('.regist-tab').hide()
+    })
+
+    let form =layui.form
+    form.verify({
+        pass:[
+            /^[\S]{6,12}$/
+            ,'密码必须6到12位，且不能出现空格'
+        ],
+        repass:function(value){
+           let passval= $('#form_regist [name=password]').val()
+            if(value!==passval){
+                return '两次密码不相同'
+            }
+        }    
+        
+    })
+
+    $('#form_regist').submit(function(e){
+        e.preventDefault()
+      
+        $.ajax({
+            type: 'post',
+            url:'/api/reguser',
+            data: $(this).serialize(),
+            success:function(res){
+               if(res.status!==0)return layer.msg(res.message)
+               layer.msg(res.message)
+               $('.link_regist').click()
+               $('#form_regist')[0].reset()
+            }
+
+        })
+    })
+    $('#form_login').submit(function(e){
+        e.preventDefault()
+      
+        $.ajax({
+            type: 'post',
+            url:'/api/login',
+            data: $(this).serialize(),
+            success:function(res){
+                console.log(res)
+               if(res.status!==0)return layer.msg(res.message)
+               layer.msg(res.message)
+                localStorage.setItem('token',res.token)
+                location.href="./index.html"
+            }
+
+        })
+    })
+})()
+</script>
 </html>
