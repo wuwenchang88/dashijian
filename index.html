@@ -5,11 +5,12 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Index</title>
     <link rel="stylesheet" href="./assets/css/index.css">
     <link rel="stylesheet" href="./assets/lib/layui/css/layui.css">
     <script src="./assets/lib/jquery.js"></script>
     <link rel="stylesheet" href="./assets/fonts/iconfont.css">
+    
 </head>
 
 <body>
@@ -26,9 +27,9 @@
                         个人中心
                     </a>
                     <dl class="layui-nav-child">
-                        <dd><a href="">基本资料</a></dd>
-                        <dd><a href="">更换头像</a></dd>
-                        <dd><a href="">重置密码</a></dd>
+                        <dd> <a href="./user/userinfo.html" target="fm">基本资料</a></dd>
+                        <dd> <a href="./user/user_avatar.html" target="fm">更换头像</a></dd>
+                        <dd><a href="./user/user_pwd.html" target="fm">重置密码</a></dd>
                     </dl>
                 </li>
                 <li class="layui-nav-item" lay-header-event="menuRight" id="icon-tuichu" lay-unselect>
@@ -77,15 +78,16 @@
                         <dl class="layui-nav-child">
                             <dd>
 
-                                <a href="javascript:;"><i class="layui-icon layui-icon-app"></i>基本资料</a>
+                                <a href="./user/userinfo.html" target="fm"><i
+                                        class="layui-icon layui-icon-app"></i>基本资料</a>
                             </dd>
                             <dd>
 
-                                <a href="javascript:;"> <i class="layui-icon layui-icon-app"></i>更换头像</a>
+                                <a href="./user/user_avatar.html" target="fm"> <i class="layui-icon layui-icon-app"></i>更换头像</a>
                             </dd>
                             <dd>
 
-                                <a href="javascript:;"> <i class="layui-icon layui-icon-app"></i>重置密码</a>
+                                <a href="./user/user_pwd.html" target="fm"> <i class="layui-icon layui-icon-app"></i>重置密码</a>
                             </dd>
                         </dl>
                     </li>
@@ -106,61 +108,7 @@
     </div>
     <script src="./assets/lib/layui/layui.all.js"></script>
     <script src="./assets/js/baseApi.js"></script>
-    <script>
-        ; (function () {
-
-            function topUserInfo() {
-                $.ajax({
-                    type: 'get',
-                    url: '/my/userinfo',
-                    headers: {
-                        Authorization: localStorage.getItem('token') || ''
-                    },
-                    success: function (res) {
-                        
-                        if (res.status !== 0) {
-                            return layer.msg(res.message)
-                        }
-                        //成功后渲染头像
-                        let username = res.data['username']
-                        let nickname = res.data['nickname']
-                        let user_pic = res.data['user_pic']
-                        let name = nickname || username
-                        let text_avatar = name[0].toUpperCase()
-                        if (nickname) {
-                            $('.userinfo .text-p').html(`欢迎 ${nickname}`)
-                        } else {
-                            $('.userinfo .text-p').html(`欢迎 ${username}`)
-                        }
-                        if (user_pic) {
-                            $('.layui-nav-img')
-                                .attr('src', user_pic)
-                                .show()
-                            $('.text-avatar').hide()
-                        } else {
-                            $('.layui-nav-img')
-                                .hide()
-                            $('.text-avatar').html(text_avatar).show()
-                        }
-                    }
-   
-
-                })
-            }
-            topUserInfo()
-
-            //退出功能
-            $('#icon-tuichu').click(function () {
-                layer.confirm('是否退出登录?', { icon: 3, title: '提示' }, function (index) {
-                    localStorage.removeItem('token')
-                    location.href = './login.html'
-                    layer.close(index);
-                });
-
-            })
-        })()
-
-    </script>
+    <script src="./assets/js/index.js"></script>
 </body>
 
 </html>
